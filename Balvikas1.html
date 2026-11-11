@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balvikas Sessions · Gublala</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',system-ui,sans-serif;background:#F6F4FF;color:#2D2A4A}
+button,input,select,textarea{font-family:inherit}
+.app{display:flex;min-height:100vh}
+
+/* Sidebar */
+.sidebar{width:250px;background:linear-gradient(170deg,#7C5CFF,#4B2FD6);color:#fff;padding:24px 16px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.brand{display:flex;gap:12px;align-items:center;padding:0 8px 24px}
+.logo{width:48px;height:48px;border-radius:16px;background:#FFD166;display:grid;place-items:center;font-size:24px;box-shadow:0 6px 0 #F4A300}
+.brand h1{font-size:22px}
+.brand small{opacity:.85;font-size:12px}
+nav{display:flex;flex-direction:column;gap:6px}
+nav button{border:0;background:none;color:#fff;cursor:pointer;padding:12px 14px;border-radius:14px;font-weight:800;display:flex;gap:10px;align-items:center;opacity:.85;text-align:left;font-size:15px}
+nav button:hover{background:rgba(255,255,255,.15)}
+nav button.on{background:#fff;color:#4B2FD6;opacity:1;box-shadow:0 6px 16px rgba(0,0,0,.15)}
+.side-foot{margin-top:auto;padding:14px;background:rgba(255,255,255,.12);border-radius:16px;font-size:13px;text-align:center;font-weight:700}
+
+/* Layout */
+main{flex:1;padding:28px 32px;min-width:0}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.topbar h2{font-size:28px}
+.topbar p{color:#8A87A8;font-weight:600}
+.teacher-chip{background:#fff;padding:8px 16px;border-radius:999px;box-shadow:0 4px 14px rgba(124,92,255,.12);font-weight:800}
+.card{background:#fff;border-radius:22px;padding:22px;box-shadow:0 8px 24px rgba(124,92,255,.08);margin-bottom:20px}
+.card-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+h3{font-size:18px}
+h4{margin:16px 0 8px}
+.muted{color:#8A87A8;font-size:14px;font-weight:600}
+.grid-2{display:grid;grid-template-columns:1.3fr 1fr;gap:20px}
+.grow{flex:1;min-width:0}
+.empty{text-align:center;padding:40px;font-weight:700;color:#8A87A8}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+.stat{border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:4px}
+.stat span{font-size:30px}
+.stat b{font-size:32px}
+.stat small{font-weight:800;opacity:.8}
+.pink{background:#FFE3EC}.mint{background:#D9F7F3}.yellow{background:#FFF1C9}.sky{background:#DDEEFF}
+
+/* Buttons & inputs */
+.btn{border:0;background:#7C5CFF;color:#fff;padding:11px 18px;border-radius:14px;font-weight:800;cursor:pointer;box-shadow:0 5px 0 #4B2FD6;transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #4B2FD6}
+.btn.small{padding:7px 12px;font-size:13px;box-shadow:0 3px 0 #4B2FD6}
+.btn.ghost{background:#EEEAFF;color:#4B2FD6;box-shadow:none}
+.btn.light{background:#fff;color:#FF6B9A;box-shadow:0 5px 0 #f0cad6}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+select,input,textarea{font-size:15px;padding:10px 12px;border:2px solid #E6E2FA;border-radius:12px;background:#fff;color:inherit;width:100%;outline:none}
+select:focus,input:focus,textarea:focus{border-color:#7C5CFF}
+.toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+.toolbar select{width:auto;min-width:300px}
+.seg{display:inline-flex;background:#fff;border-radius:14px;padding:4px;gap:4px;box-shadow:0 4px 12px rgba(124,92,255,.08);flex-wrap:wrap}
+.seg button{border:0;background:none;padding:9px 14px;border-radius:10px;font-weight:800;cursor:pointer;color:#8A87A8}
+.seg button.on{background:#7C5CFF;color:#fff}
+.pill{background:#EEEAFF;color:#4B2FD6;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:800;white-space:nowrap}
+.status{padding:6px 12px;border-radius:999px;font-size:12px;font-weight:800;white-space:nowrap}
+.status.done{background:#D9F7F3;color:#0E8C7F}
+.status.pending{background:#FFF1C9;color:#9A6B00}
+.status.upcoming{background:#E4E0FF;color:#4B2FD6}
+.tag{padding:3px 10px;border-radius:999px;font-size:12px;font-weight:800;white-space:nowrap}
+
+/* Progress */
+.bar{height:10px;background:#EEEAFF;border-radius:99px;overflow:hidden}
+.bar span{display:block;height:100%;background:linear-gradient(90deg,#2EC4B6,#7C5CFF);border-radius:99px}
+.bar.big{height:16px;margin:10px 0}
+.time-head{display:flex;justify-content:space-between;font-weight:800;flex-wrap:wrap;gap:6px}
+.warn{color:#C2185B}
+
+/* Chart */
+.chart{display:flex;align-items:flex-end;gap:14px;height:240px;padding-top:10px}
+.col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px}
+.col b{font-size:13px}
+.bar-v{width:100%;max-width:56px;border-radius:14px 14px 6px 6px;background:linear-gradient(#7C5CFF,#2EC4B6)}
+
+/* Next session card */
+.next{background:linear-gradient(135deg,#FF8A5B,#FF6B9A);color:#fff}
+.next .muted{color:rgba(255,255,255,.9)}
+.next h2{font-size:26px;margin:6px 0}
+
+/* Rows / avatars */
+.row{display:flex;align-items:center;gap:14px;padding:12px;border-radius:16px;background:#FBFAFF;margin-bottom:10px;flex-wrap:wrap}
+.row small{color:#8A87A8;display:block;font-weight:600}
+.avatar{width:44px;height:44px;border-radius:50%;color:#fff;display:grid;place-items:center;font-weight:900;flex-shrink:0}
+.ti{font-size:22px}
+
+/* Attendance */
+.counts span{padding:6px 12px;border-radius:999px;font-weight:800;font-size:14px;margin-left:6px}
+.c-p{background:#D9F7F3;color:#0E8C7F}.c-l{background:#FFF1C9;color:#9A6B00}.c-a{background:#FFE3EC;color:#C2185B}
+.marks{display:flex;gap:8px;flex-wrap:wrap}
+.mk{border:2px solid #E6E2FA;background:#fff;padding:8px 14px;border-radius:999px;font-weight:800;cursor:pointer;color:#8A87A8}
+.mk.on.p{background:#2EC4B6;border-color:#2EC4B6;color:#fff}
+.mk.on.l{background:#F4A300;border-color:#F4A300;color:#fff}
+.mk.on.a{background:#FF6B9A;border-color:#FF6B9A;color:#fff}
+.footer-bar{display:flex;gap:14px;align-items:center;justify-content:flex-end;flex-wrap:wrap;margin-top:12px;padding-top:16px;border-top:2px dashed #EEEAFF}
+.check{display:flex;gap:8px;align-items:center;font-weight:700;font-size:14px;color:#8A87A8;cursor:pointer}
+.check input{width:auto}
+
+/* Sessions */
+.session{display:flex;gap:16px;align-items:center;background:#fff;border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:0 8px 24px rgba(124,92,255,.08);flex-wrap:wrap}
+.date-box{width:70px;height:70px;border-radius:18px;background:#EEEAFF;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#4B2FD6;flex-shrink:0}
+.date-box b{font-size:26px;line-height:1}
+.date-box span{font-size:12px;font-weight:800;text-transform:uppercase}
+
+/* Planner */
+.act{display:flex;gap:14px;align-items:flex-start;padding:16px;border-radius:18px;background:#fff;margin-bottom:12px;box-shadow:0 8px 24px rgba(124,92,255,.08)}
+.act.done{opacity:.55}
+.act-num{width:30px;height:30px;border-radius:50%;background:#7C5CFF;color:#fff;display:grid;place-items:center;font-weight:900;font-size:13px;flex-shrink:0}
+.act-icon{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;font-size:22px;background:#FFF1C9;flex-shrink:0}
+.act-body{flex:1;min-width:0}
+.act-body p{font-size:14px;color:#5E5A7D;margin-top:6px;font-weight:600}
+.act-actions{display:flex;gap:4px}
+.act-actions button{border:0;background:#F6F4FF;width:34px;height:34px;border-radius:10px;cursor:pointer;font-size:15px}
+.idea{border:0;background:#FBFAFF;width:100%;display:flex;gap:12px;align-items:center;padding:12px;border-radius:16px;margin-bottom:8px;cursor:pointer;text-align:left;font-size:20px}
+.idea:hover{background:#F1EDFF}
+.idea b{font-size:15px;display:block}
+.idea small{color:#8A87A8;font-size:13px;font-weight:700}
+
+/* Notifications */
+.notif{display:flex;gap:12px;padding:14px;border-radius:16px;background:#FBFAFF;margin-bottom:10px}
+.n-ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:18px;flex-shrink:0}
+.n-top{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.notif p{font-size:14px;margin:6px 0;color:#3D3960;font-weight:600;line-height:1.5}
+.notif small{font-weight:700}
+.preview{background:#FBFAFF;border-radius:16px;padding:18px;line-height:1.6;font-weight:600;border:2px dashed #E6E2FA;white-space:pre-wrap}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:10px;border-bottom:1px solid #EEEAFF;vertical-align:top}
+th{color:#8A87A8;font-size:12px;text-transform:uppercase}
+.msg{max-width:340px;color:#5E5A7D;font-weight:600}
+.table-wrap{overflow-x:auto}
+
+/* Modal & toast */
+.modal-bg{position:fixed;inset:0;background:rgba(45,42,74,.45);display:none;place-items:center;z-index:50;padding:16px}
+.modal-bg.show{display:grid}
+.modal{background:#fff;border-radius:24px;padding:24px;width:min(500px,100%);max-height:90vh;overflow:auto;animation:pop .2s}
+@keyframes pop{from{transform:scale(.95);opacity:0}}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.modal-head button{border:0;background:#EEEAFF;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:14px}
+label{display:block;font-weight:800;font-size:14px;margin-bottom:12px;color:#5E5A7D}
+label input,label select,label textarea{margin-top:6px;font-weight:600}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.actions{display:flex;justify-content:flex-end;gap:10px;margin-top:8px}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:#2D2A4A;color:#fff;padding:12px 20px;border-radius:14px;font-weight:800;transition:transform .3s;z-index:60}
+#toast.show{transform:translateX(-50%) translateY(0)}
+
+/* Responsive */
+@media(max-width:900px){
+  .app{flex-direction:column}
+  .sidebar{width:100%;height:auto;position:static;padding:14px}
+  nav{flex-direction:row;overflow-x:auto}
+  nav button{white-space:nowrap}
+  .side-foot{display:none}
+  .grid-2{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  main{padding:18px}
+  .toolbar select{min-width:0;width:100%}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">🕉️</div>
+      <div><h1>Balvikas</h1><small>Sathya Sai · Gublala</small></div>
+    </div>
+    <nav id="nav"></nav>
+    <div class="side-foot">“Love all, serve all” 🌼</div>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <div><h2 id="pageTitle"></h2><p id="pageSub"></p></div>
+      <div class="teacher-chip">👩‍🏫 Lakshmi Devi</div>
+    </header>
+    <section id="view"></section>
+  </main>
+</div>
+
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <div class="modal-head"><h3 id="mTitle"></h3><button onclick="closeModal()">✕</button></div>
+    <div id="mBody"></div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+/* ============ CONSTANTS & HELPERS ============ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Date.now() + Math.floor(Math.random() * 1000);
+const isoDate = d => new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+const todayISO = () => isoDate(new Date());
+const addDays = n => { const d = new Date(); d.setDate(d.getDate() + n); return isoDate(d); };
+const fmtDate = iso => new Date(iso + 'T00:00').toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'});
+const shortDate = iso => new Date(iso + 'T00:00').toLocaleDateString('en-IN', {day:'numeric', month:'short'});
+const groupOf = age => age <= 8 ? 'Group I' : age <= 11 ? 'Group II' : 'Group III';
+const COLORS = ['#7C5CFF','#FF6B9A','#2EC4B6','#FF8A5B','#F4A300','#4CC9F0'];
+const colorOf = id => COLORS[id % COLORS.length];
+const initials = n => n.split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
+const byDate = (a, b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time);
+const isAttended = st => st === 'present' || st === 'late';
+
+const TYPES = {
+  story:{label:'Story', icon:'📖'}, song:{label:'Bhajan / Song', icon:'🎵'},
+  game:{label:'Game', icon:'🎲'}, craft:{label:'Craft', icon:'🎨'},
+  value:{label:'Value Talk', icon:'💡'}, meditation:{label:'Meditation', icon:'🧘'},
+  drama:{label:'Drama', icon:'🎭'}, quiz:{label:'Quiz', icon:'❓'}
+};
+const TYPE_META = {
+  absence:['❌','Absent','#FF6B9A'], late:['⏰','Late','#F4A300'],
+  topic:['📣','Next topic','#7C5CFF'], alert:['📉','Attendance alert','#2EC4B6']
+};
+const TOPIC_BANK = [
+  {type:'story', title:'The Honest Woodcutter', minutes:15, materials:'Picture cards'},
+  {type:'song', title:'Sri Sai Sharanam Bhajan', minutes:10, materials:'Harmonium / speaker'},
+  {type:'game', title:'Truth Relay Race', minutes:15, materials:'Cones, chart paper'},
+  {type:'craft', title:'Kindness Card Making', minutes:20, materials:'Colour paper, glue, sketch pens'},
+  {type:'value', title:'Value Circle Talk', minutes:15, materials:'None'},
+  {type:'meditation', title:'Silent Minute with Om', minutes:5, materials:'Soft music'},
+  {type:'drama', title:'Role Play: Telling the Truth', minutes:15, materials:'Props box'},
+  {type:'quiz', title:'Balvikas Quick Quiz', minutes:10, materials:'Question cards'}
+];
+const NAV = [
+  {view:'dashboard', icon:'🏠', label:'Dashboard'},
+  {view:'sessions', icon:'📅', label:'Sessions'},
+  {view:'attendance', icon:'✅', label:'Attendance'},
+  {view:'notifications', tab:'alerts', icon:'🔔', label:'Parent Alerts'},
+  {view:'notifications', tab:'topic', icon:'📣', label:'Next Session Topic'},
+  {view:'planner', icon:'🧩', label:'Activity Planner'}
+];
+
+/* ============ DATA ============ */
+const KEY = 'balvikas-gublala-v1';
+function seed(){
+  const kidData = [
+    ['Aarav Reddy',8,'Suresh Reddy','98480 11223'], ['Diya Sharma',7,'Ramesh Sharma','98490 22334'],
+    ['Kiran Kumar',10,'Venkat Rao','98661 33445'], ['Sneha Priya',9,'Prasad Naidu','97010 44556'],
+    ['Rohit Verma',12,'Anand Verma','99120 55667'], ['Meghana P',6,'Srinivas P','90000 66778'],
+    ['Harika T',11,'Mohan T','98855 77889'], ['Varun Goud',13,'Krishna Goud','97055 88990']
+  ];
+  const present = {1:'present',2:'present',3:'present',4:'present',5:'present',6:'present',7:'present',8:'present'};
+  return {
+    teachers:['Lakshmi Devi','Ravi Kumar','Anitha S'],
+    kids: kidData.map(([name,age,parent,phone],i) => ({id:i+1, name, age, parent, phone})),
+    sessions:[
+      {id:1, date:addDays(-21), time:'09:00', duration:90, topic:'Satyam — Speak the Truth', teacher:'Lakshmi Devi',
+        attendance:{...present, 4:'late'}},
+      {id:2, date:addDays(-14), time:'09:00', duration:90, topic:'Prema — Love in Action', teacher:'Ravi Kumar',
+        attendance:{...present, 2:'absent', 6:'absent'}},
+      {id:3, date:addDays(-7), time:'09:00', duration:90, topic:'Sahanam — Patience', teacher:'Anitha S',
+        attendance:{...present, 5:'absent', 8:'late'}},
+      {id:4, date:addDays(0), time:'09:00', duration:90, topic:'Shanti — Peace of Mind', teacher:'Ravi Kumar'},
+      {id:5, date:addDays(7), time:'09:00', duration:90, topic:'Ahimsa — Non-violence', teacher:'Anitha S',
+        topicNote:'Please bring a drawing of one kind act you did this week.'}
+    ],
+    activities:[
+      {id:101, sessionId:4, title:'Silent Minute with Om', type:'meditation', minutes:5, teacher:'Ravi Kumar', materials:'Soft music', description:'Begin with 1 minute of silence.', done:false},
+      {id:102, sessionId:4, title:'Value Circle Talk', type:'value', minutes:15, teacher:'Ravi Kumar', materials:'None', description:'Children share one peaceful moment they had.', done:false},
+      {id:103, sessionId:5, title:'The Honest Woodcutter', type:'story', minutes:15, teacher:'Anitha S', materials:'Picture cards', description:'Narrate the story and ask: what would you do?', done:false},
+      {id:104, sessionId:5, title:'Kindness Card Making', type:'craft', minutes:20, teacher:'Anitha S', materials:'Colour paper, glue', description:'Make a card for a family member.', done:false}
+    ],
+    notifications:[
+      {id:1, type:'topic', kidId:1, kidName:'Aarav Reddy', parent:'Suresh Reddy', phone:'98480 11223', sessionId:4,
+        message:'Namaste Suresh Reddy 🙏 Balvikas next session is on today at 09:00. Topic: "Shanti — Peace of Mind".', sentAt:new Date(Date.now()-3600000).toISOString()}
+    ]
+  };
+}
+let db = JSON.parse(localStorage.getItem(KEY)) || seed();
+const save = () => localStorage.setItem(KEY, JSON.stringify(db));
+
+/* ============ STATE ============ */
+let view = 'dashboard', notifTab = 'alerts', attSession = null, attGroup = 'All', autoNotify = true;
+let plannerSession = null, draft = {sid:null, marks:{}};
+
+/* ============ QUERIES ============ */
+const sorted = () => [...db.sessions].sort(byDate);
+const upcoming = () => sorted().filter(s => statusOf(s) === 'upcoming');
+const findSession = id => db.sessions.find(s => s.id === id);
+const statusOf = s => s.attendance ? 'done' : (s.date < todayISO() ? 'pending' : 'upcoming');
+const doneSessions = () => db.sessions.filter(s => s.attendance);
+const pct = s => Math.round(Object.values(s.attendance).filter(isAttended).length / (db.kids.length || 1) * 100);
+function kidsStats(){
+  const done = doneSessions();
+  return db.kids.map(k => {
+    const total = done.length;
+    const attended = done.filter(s => isAttended(s.attendance[k.id])).length;
+    return {...k, total, attended, pct: total ? Math.round(attended / total * 100) : 100};
+  });
+}
+const timeAgo = iso => {
+  const m = Math.round((Date.now() - new Date(iso)) / 60000);
+  return m < 1 ? 'just now' : m < 60 ? m + ' min ago' : m < 1440 ? Math.round(m / 60) + ' h ago' : shortDate(isoDate(new Date(iso)));
+};
+const badge = t => `<span class="tag" style="background:${TYPE_META[t][2]}22;color:${TYPE_META[t][2]}">${TYPE_META[t][0]} ${TYPE_META[t][1]}</span>`;
+const emptyState = msg => `<div class="card empty"><p>${msg}</p></div>`;
+
+/* ============ ACTIONS ============ */
+function go(v, tab){ view = v; if(tab) notifTab = tab; render(); }
+function goAtt(id){ attSession = id; go('attendance'); }
+function goPlan(id){ plannerSession = id; go('planner'); }
+function mark(kidId, st){ draft.marks[kidId] = st; render(); }
+function markAll(st){ db.kids.forEach(k => draft.marks[k.id] = st); render(); }
+
+function addNotif(type, kid, message, sessionId = null){
+  db.notifications.unshift({
+    id: uid(), type, kidId: kid.id, kidName: kid.name, parent: kid.parent, phone: kid.phone,
+    message, sessionId, sentAt: new Date().toISOString()
+  });
+}
+const lowMsg = k => `Namaste ${k.parent} 🙏 ${k.name}'s Balvikas attendance is ${k.pct}% so far this term. Regular attendance helps children grow in values like truth and love. Kindly encourage them to attend. Jai Sai Ram!`;
+const topicMsg = (parent, date, time, topic, note) =>
+  `Namaste ${parent} 🙏\nBalvikas next session: ${fmtDate(date)} at ${time}\nTopic: "${topic}"\n${note ? note + '\n' : ''}Please send your child on time. Jai Sai Ram! 🌼`;
+
+function sendLow(id){
+  const k = kidsStats().find(x => x.id === id);
+  addNotif('alert', k, lowMsg(k));
+  save(); toast(`📉 Reminder sent to ${k.parent}`); render();
+}
+function sendAllLow(){
+  const low = kidsStats().filter(k => k.pct < 75);
+  low.forEach(k => addNotif('alert', k, lowMsg(k)));
+  save(); toast(`📉 Reminders sent to ${low.length} parents`); render();
+}
+
+function saveAttendance(){
+  const s = findSession(attSession);
+  const missing = db.kids.filter(k => !draft.marks[k.id]);
+  if(missing.length){ toast(`Please mark ${missing.length} remaining child(ren) first`); return; }
+  s.attendance = {...draft.marks};
+  // Re-saving replaces earlier auto-alerts for this session
+  db.notifications = db.notifications.filter(n => !(n.sessionId === s.id && (n.type === 'absence' || n.type === 'late')));
+  if(autoNotify){
+    db.kids.forEach(k => {
+      const st = s.attendance[k.id];
+      if(st === 'absent') addNotif('absence', k,
+        `Namaste ${k.parent} 🙏 ${k.name} was absent from Balvikas on ${fmtDate(s.date)} (topic: "${s.topic}"). We missed them! Please encourage attendance at the next session.`, s.id);
+      if(st === 'late') addNotif('late', k,
+        `${k.name} joined Balvikas late on ${fmtDate(s.date)}. Sessions begin at ${s.time}, please help them arrive on time. Jai Sai Ram!`, s.id);
+    });
+  }
+  save();
+  toast('✅ Attendance saved' + (autoNotify ? ' & parents notified' : ''));
+  render();
+}
+
+function broadcastTopic(id, aud = 'all'){
+  const s = findSession(id);
+  const kids = db.kids.filter(k => aud === 'all' || groupOf(k.age) === aud);
+  kids.forEach(k => addNotif('topic', k, topicMsg(k.parent, s.date, s.time, s.topic, s.topicNote), s.id));
+  s.topicSent = true;
+  save();
+  toast(`📣 Topic sent to ${kids.length} parents`);
+  render();
+}
+function sendTopic(e){
+  e.preventDefault();
+  const f = e.target;
+  const s = findSession(+f.session.value);
+  s.topic = f.topic.value.trim();
+  s.topicNote = f.note.value.trim();
+  broadcastTopic(s.id, f.aud.value);
+}
+function previewTopic(f){
+  const s = findSession(+f.session.value);
+  $('#preview').textContent = topicMsg('Parent', s.date, s.time, f.topic.value, f.note.value);
+}
+
+function toggleAct(id){ const a = db.activities.find(x => x.id === id); a.done = !a.done; save(); render(); }
+function delAct(id){ db.activities = db.activities.filter(a => a.id !== id); save(); render(); }
+function moveAct(id, dir){
+  const sid = db.activities.find(a => a.id === id).sessionId;
+  const same = db.activities.map((a, i) => [a, i]).filter(([a]) => a.sessionId === sid);
+  const p = same.findIndex(([a]) => a.id === id), q = p + dir;
+  if(q < 0 || q >= same.length) return;
+  const i1 = same[p][1], i2 = same[q][1];
+  [db.activities[i1], db.activities[i2]] = [db.activities[i2], db.activities[i1]];
+  save(); render();
+}
+
+/* ============ MODALS ============ */
+function openModal(title, body, onSubmit){
+  $('#mTitle').textContent = title;
+  $('#mBody').innerHTML = `<form id="mForm">${body}
+    <div class="actions">
+      <button type="button" class="btn ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn">Save</button>
+    </div></form>`;
+  $('#mForm').onsubmit = e => { e.preventDefault(); onSubmit(Object.fromEntries(new FormData(e.target))); };
+  $('#modal').classList.add('show');
+}
+function closeModal(){ $('#modal').classList.remove('show'); }
+$('#modal').addEventListener('click', e => { if(e.target.id === 'modal') closeModal(); });
+
+function openSessionModal(){
+  openModal('New Balvikas session', `
+    <label>Date<input type="date" name="date" required value="${addDays(7)}"></label>
+    <label>Time<input type="time" name="time" required value="09:00"></label>
+    <label>Topic (value)<input name="topic" required placeholder="e.g. Ahimsa — Non-violence"></label>
+    <label>Teacher<select name="teacher">${db.teachers.map(t => `<option>${esc(t)}</option>`).join('')}</select></label>
+    <label>Duration (minutes)<input type="number" name="duration" min="30" value="90" required></label>`,
+    d => {
+      db.sessions.push({id:uid(), date:d.date, time:d.time, topic:d.topic, teacher:d.teacher, duration:+d.duration});
+      save(); closeModal(); toast('✨ Session created'); render();
+    });
+}
+
+function openActivityModal(i){
+  const p = i !== undefined ? TOPIC_BANK[i] : {type:'story', minutes:15};
+  openModal('Plan an activity', `
+    <label>Activity title<input name="title" required value="${esc(p.title || '')}"></label>
+    <div class="two">
+      <label>Type<select name="type">${Object.entries(TYPES).map(([k,v]) =>
+        `<option value="${k}" ${k === p.type ? 'selected' : ''}>${v.icon} ${v.label}</option>`).join('')}</select></label>
+      <label>Minutes<input type="number" name="minutes" min="1" required value="${p.minutes || 15}"></label>
+    </div>
+    <label>Teacher<select name="teacher">${db.teachers.map(t => `<option>${esc(t)}</option>`).join('')}</select></label>
+    <label>Materials<input name="materials" value="${esc(p.materials || '')}"></label>
+    <label>Steps / description<textarea name="description" rows="3" placeholder="Brief steps for the teacher"></textarea></label>`,
+    d => {
+      db.activities.push({id:uid(), sessionId:plannerSession, title:d.title, type:d.type, minutes:+d.minutes,
+        teacher:d.teacher, materials:d.materials, description:d.description, done:false});
+      save(); closeModal(); toast('🧩 Activity added'); render();
+    });
+}
+
+/* ============ VIEWS ============ */
+function vDashboard(){
+  const done = doneSessions();
+  const avg = done.length ? Math.round(done.reduce((a, s) => a + pct(s), 0) / done.length) : 0;
+  const next = upcoming()[0];
+  const pendingAtt = db.sessions.filter(s => statusOf(s) === 'pending');
+  const low = kidsStats().filter(k => k.pct < 75);
+  const nextActs = next ? db.activities.filter(a => a.sessionId === next.id) : [];
+
+  const todos = [];
+  if(pendingAtt.length) todos.push(['✅', `${pendingAtt.length} session(s) waiting for attendance`, 'attendance']);
+  if(low.length) todos.push(['📉', `${low.length} child(ren) below 75% attendance`, 'notifications']);
+  if(next && !nextActs.length) todos.push(['🧩', `No activities planned for ${shortDate(next.date)}`, 'planner']);
+
+  return `
+  <div class="stats">
+    <div class="stat pink"><span>🧒</span><b>${db.kids.length}</b><small>Children enrolled</small></div>
+    <div class="stat mint"><span>📚</span><b>${done.length}</b><small>Sessions completed</small></div>
+    <div class="stat yellow"><span>📈</span><b>${avg}%</b><small>Average attendance</small></div>
+    <div class="stat sky"><span>💌</span><b>${db.notifications.length}</b><small>Parent messages sent</small></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head"><h3>Attendance trend</h3><span class="pill">Last ${Math.min(done.length, 6)} sessions</span></div>
+      <div class="chart">${done.slice(-6).map(s => `
+        <div class="col"><b>${pct(s)}%</b>
+          <div class="bar-v" style="height:${Math.max(pct(s), 4)}%"></div>
+          <small class="muted">${shortDate(s.date)}</small></div>`).join('') || '<p class="muted">No completed sessions yet.</p>'}
+      </div>
+    </div>
+
+    <div class="card next">
+      ${next ? `
+        <small>⭐ NEXT SESSION</small>
+        <h2>${esc(next.topic)}</h2>
+        <p class="muted">📅 ${fmtDate(next.date)} · 🕘 ${next.time} · 👩‍🏫 ${esc(next.teacher)}</p>
+        <p class="muted">🧩 ${nextActs.length} activities planned</p>
+        <div class="btns">
+          <button class="btn light" onclick="broadcastTopic(${next.id})">📣 Notify all parents</button>
+          <button class="btn ghost" onclick="go('notifications','topic')">Edit topic</button>
+        </div>` : `
+        <h3>No upcoming session</h3>
+        <p class="muted" style="margin:8px 0 14px">Create the next Balvikas session to get started.</p>
+        <button class="btn light" onclick="openSessionModal()">＋ Create session</button>`}
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head"><h3>📝 To-do for teachers</h3></div>
+      ${todos.map(([ic, t, v]) => `
+        <div class="row"><span class="ti">${ic}</span><div class="grow"><b>${t}</b></div>
+          <button class="btn small" onclick="go('${v}')">Open</button></div>`).join('') || '<p class="muted">All caught up 🎉</p>'}
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Recent parent messages</h3>
+        <button class="btn small ghost" onclick="go('notifications','log')">View all</button></div>
+      ${feed(db.notifications.slice(0, 3))}
+    </div>
+  </div>`;
+}
+
+function vSessions(){
+  if(!db.sessions.length) return emptyState('No sessions yet.');
+  return `
+  <div class="toolbar">
+    <div><h3>All sessions</h3><small class="muted">${db.sessions.length} sessions this term</small></div>
+    <button class="btn" onclick="openSessionModal()">＋ New session</button>
+  </div>
+  ${sorted().map(s => {
+    const st = statusOf(s);
+    const d = new Date(s.date + 'T00:00');
+    const label = {done:'Completed', pending:'Attendance pending', upcoming:'Upcoming'}[st];
+    return `
+    <div class="session">
+      <div class="date-box"><b>${d.getDate()}</b><span>${d.toLocaleDateString('en-IN', {month:'short'})}</span></div>
+      <div class="grow">
+        <h3>${esc(s.topic)}</h3>
+        <p class="muted">🕘 ${s.time} · ⏱ ${s.duration} min · 👩‍🏫 ${esc(s.teacher)}</p>
+        ${st === 'done' ? `<div class="bar" style="margin-top:8px;max-width:320px"><span style="width:${pct(s)}%"></span></div>
+          <small class="muted">${pct(s)}% attended</small>` : ''}
+      </div>
+      <span class="status ${st}">${label}</span>
+      <div class="btns" style="margin-top:0">
+        <button class="btn small" onclick="goAtt(${s.id})">✅ Attendance</button>
+        <button class="btn small ghost" onclick="goPlan(${s.id})">🧩 Plan</button>
+      </div>
+    </div>`;
+  }).join('')}`;
+}
+
+function vAttendance(){
+  if(!db.sessions.length) return emptyState('Create a session first to take attendance.');
+  const list = sorted();
+  if(!findSession(attSession)) attSession = (list.find(s => statusOf(s) === 'pending') || list.find(s => statusOf(s) === 'upcoming') || list[0]).id;
+  const s = findSession(attSession);
+  if(draft.sid !== s.id) draft = {sid:s.id, marks:{...(s.attendance || {})}};
+
+  const kids = db.kids.filter(k => attGroup === 'All' || groupOf(k.age) === attGroup);
+  const c = {present:0, late:0, absent:0};
+  db.kids.forEach(k => { const m = draft.marks[k.id]; if(m) c[m]++; });
+  const mk = (k, st, label, cls) =>
+    `<button class="mk ${cls}${draft.marks[k.id] === st ? ' on' : ''}" onclick="mark(${k.id},'${st}')">${label}</button>`;
+
+  return `
+  <div class="toolbar">
+    <select onchange="attSession=+this.value;render()">
+      ${list.map(x => `<option value="${x.id}" ${x.id === s.id ? 'selected' : ''}>${fmtDate(x.date)} · ${esc(x.topic)}</option>`).join('')}
+    </select>
+    <div class="seg">${['All','Group I','Group II','Group III'].map(g =>
+      `<button class="${attGroup === g ? 'on' : ''}" onclick="attGroup='${g}';render()">${g}</button>`).join('')}</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div><h3>${esc(s.topic)}</h3><small class="muted">${fmtDate(s.date)} · ${s.time} · ${esc(s.teacher)}</small></div>
+      <div class="counts"><span class="c-p">✅ ${c.present}</span><span class="c-l">⏰ ${c.late}</span><span class="c-a">❌ ${c.absent}</span></div>
+    </div>
+
+    ${kids.map(k => `
+      <div class="row">
+        <div class="avatar" style="background:${colorOf(k.id)}">${initials(k.name)}</div>
+        <div class="grow"><b>${esc(k.name)}</b><small>Age ${k.age} · ${groupOf(k.age)} · Parent: ${esc(k.parent)}</small></div>
+        <div class="marks">
+          ${mk(k,'present','✅ Present','p')}
+          ${mk(k,'late','⏰ Late','l')}
+          ${mk(k,'absent','❌ Absent','a')}
+        </div>
+      </div>`).join('') || '<p class="muted">No children in this group.</p>'}
+
+    <div class="footer-bar">
+      <button class="btn ghost small" onclick="markAll('present')">Mark all present</button>
+      <label class="check"><input type="checkbox" ${autoNotify ? 'checked' : ''} onchange="autoNotify=this.checked">
+        Auto-notify parents on absence / late</label>
+      <button class="btn" onclick="saveAttendance()">💾 Save attendance</button>
+    </div>
+  </div>`;
+}
+
+function feed(list){
+  return list.length ? list.slice(0, 25).map(n => `
+    <div class="notif">
+      <div class="n-ic" style="background:${TYPE_META[n.type][2]}22">${TYPE_META[n.type][0]}</div>
+      <div class="grow">
+        <div class="n-top"><b>To: ${esc(n.parent)}</b><small class="muted">re: ${esc(n.kidName)}</small>${badge(n.type)}</div>
+        <p>${esc(n.message)}</p>
+        <small class="muted">📱 App + SMS · ${timeAgo(n.sentAt)}</small>
+      </div>
+    </div>`).join('') : '<p class="muted">No messages yet.</p>';
+}
+
+function alertsTab(){
+  const low = kidsStats().filter(k => k.pct < 75);
+  return `
+  <div class="card">
+    <div class="card-head">
+      <div><h3>📉 Low attendance (below 75%)</h3>
+        <small class="muted">Send a friendly reminder to parents of children who are falling behind</small></div>
+      ${low.length ? `<button class="btn small" onclick="sendAllLow()">Remind all (${low.length})</button>` : ''}
+    </div>
+    ${low.map(k => `
+      <div class="row">
+        <div class="avatar" style="background:${colorOf(k.id)}">${initials(k.name)}</div>
+        <div class="grow"><b>${esc(k.name)}</b><small>${k.attended}/${k.total} sessions attended · Parent: ${esc(k.parent)}</small></div>
+        <span class="pill">${k.pct}%</span>
+        <button class="btn small ghost" onclick="sendLow(${k.id})">Send reminder</button>
+      </div>`).join('') || '<p class="muted">🎉 Everyone is above 75%!</p>'}
+  </div>
+  <div class="card">
+    <h3>🔔 Automatic alerts (absent / late)</h3>
+    <p class="muted" style="margin:4px 0 14px">Sent automatically when attendance is saved.</p>
+    ${feed(db.notifications.filter(n => n.type === 'absence' || n.type === 'late'))}
+  </div>`;
+}
+
+function topicTab(){
+  const up = upcoming();
+  if(!up.length) return emptyState('No upcoming sessions. Create one from the Sessions page.');
+  const s = up[0];
+  return `
+  <div class="grid-2">
+    <div class="card">
+      <h3 style="margin-bottom:14px">📣 Announce next session topic</h3>
+      <form onsubmit="sendTopic(event)" oninput="previewTopic(this)">
+        <label>Session<select name="session">${up.map(x =>
+          `<option value="${x.id}" ${x.id === s.id ? 'selected' : ''}>${fmtDate(x.date)} · ${esc(x.topic)}</option>`).join('')}</select></label>
+        <label>Topic<input name="topic" required value="${esc(s.topic)}"></label>
+        <label>Note for parents / what to bring<textarea name="note" rows="3">${esc(s.topicNote || '')}</textarea></label>
+        <label>Send to<select name="aud">
+          <option value="all">All parents (${db.kids.length})</option>
+          ${['Group I','Group II','Group III'].map(g =>
+            `<option value="${g}">${g} parents (${db.kids.filter(k => groupOf(k.age) === g).length})</option>`).join('')}
+        </select></label>
+        <button class="btn">📣 Send to parents</button>
+      </form>
+    </div>
+    <div class="card">
+      <h3 style="margin-bottom:14px">Message preview</h3>
+      <div class="preview" id="preview">${esc(topicMsg('Parent', s.date, s.time, s.topic, s.topicNote))}</div>
+    </div>
+  </div>`;
+}
+
+function logTab(){
+  return `
+  <div class="card table-wrap">
+    <table>
+      <tr><th>When</th><th>Type</th><th>Parent</th><th>Child</th><th>Message</th></tr>
+      ${db.notifications.map(n => `
+        <tr><td>${timeAgo(n.sentAt)}</td><td>${badge(n.type)}</td><td>${esc(n.parent)}</td>
+        <td>${esc(n.kidName)}</td><td class="msg">${esc(n.message)}</td></tr>`).join('')
+        || '<tr><td colspan="5" class="muted">No messages sent yet.</td></tr>'}
+    </table>
+  </div>`;
+}
+
+function vNotifications(){
+  const tabs = [['alerts','🚨 Attendance alerts'], ['topic','📣 Next session topic'], ['log','📜 Sent log']];
+  const body = notifTab === 'alerts' ? alertsTab() : notifTab === 'topic' ? topicTab() : logTab();
+  return `
+  <div class="seg" style="margin-bottom:20px">${tabs.map(([k, l]) =>
+    `<button class="${notifTab === k ? 'on' : ''}" onclick="notifTab='${k}';render()">${l}</button>`).join('')}</div>
+  ${body}`;
+}
+
+function actCard(a, i){
+  return `
+  <div class="act ${a.done ? 'done' : ''}">
+    <div class="act-num">${i + 1}</div>
+    <div class="act-icon">${TYPES[a.type].icon}</div>
+    <div class="act-body">
+      <b>${esc(a.title)}</b> <span class="pill">${a.minutes} min</span>
+      <small class="muted" style="display:block;margin-top:2px">${TYPES[a.type].label} · 👩‍🏫 ${esc(a.teacher)} · 🧺 ${esc(a.materials || '—')}</small>
+      ${a.description ? `<p>${esc(a.description)}</p>` : ''}
+    </div>
+    <div class="act-actions">
+      <button title="Mark done" onclick="toggleAct(${a.id})">${a.done ? '✅' : '⬜'}</button>
+      <button title="Move up" onclick="moveAct(${a.id},-1)">↑</button>
+      <button title="Move down" onclick="moveAct(${a.id},1)">↓</button>
+      <button title="Delete" onclick="delAct(${a.id})">🗑️</button>
+    </div>
+  </div>`;
+}
+
+function vPlanner(){
+  if(!db.sessions.length) return emptyState('Create a session first to plan activities.');
+  const list = sorted();
+  if(!findSession(plannerSession)) plannerSession = (list.find(s => statusOf(s) === 'upcoming') || list[0]).id;
+  const s = findSession(plannerSession);
+  const acts = db.activities.filter(a => a.sessionId === s.id);
+  const planned = acts.reduce((t, a) => t + a.minutes, 0);
+  const used = Math.min(100, Math.round(planned / s.duration * 100));
+  const over = planned > s.duration;
+
+  return `
+  <div class="toolbar">
+    <select onchange="plannerSession=+this.value;render()">
+      ${list.map(x => `<option value="${x.id}" ${x.id === s.id ? 'selected' : ''}>${fmtDate(x.date)} · ${esc(x.topic)}</option>`).join('')}
+    </select>
+    <button class="btn" onclick="openActivityModal()">＋ Add activity</button>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <div class="card">
+        <h3>${esc(s.topic)}</h3>
+        <p class="muted">${fmtDate(s.date)} · ${s.time} · ${esc(s.teacher)}</p>
+        <div class="time-head" style="margin-top:12px">
+          <span>${planned} / ${s.duration} min planned</span>
+          <span class="${over ? 'warn' : ''}">${over ? '⚠️ Over time — trim an activity' : '✨ Timing looks good'}</span>
+        </div>
+        <div class="bar big"><span style="width:${used}%;background:${over ? '#FF6B9A' : 'linear-gradient(90deg,#2EC4B6,#7C5CFF)'}"></span></div>
+      </div>
+      ${acts.length ? acts.map((a, i) => actCard(a, i)).join('')
+        : emptyState('🧩 No activities yet. Add one, or pick an idea from the bank →')}
+    </div>
+
+    <div class="card">
+      <h3>💡 Idea bank</h3>
+      <p class="muted" style="margin:4px 0 14px">Tap an idea to add it to this session.</p>
+      ${TOPIC_BANK.map((t, i) => `
+        <button class="idea" onclick="openActivityModal(${i})">
+          <span>${TYPES[t.type].icon}</span>
+          <div><b>${esc(t.title)}</b><small>${TYPES[t.type].label} · ${t.minutes} min</small></div>
+        </button>`).join('')}
+    </div>
+  </div>`;
+}
+
+/* ============ ROUTER ============ */
+const VIEWS = {dashboard:vDashboard, sessions:vSessions, attendance:vAttendance, notifications:vNotifications, planner:vPlanner};
+const TITLES = {
+  dashboard:['Dashboard', 'Jai Sai Ram! Here is what is happening at Gublala 🌸'],
+  sessions:['Balvikas Sessions', 'Schedule, track and open every session'],
+  attendance:['Session Attendance', 'Mark each child as present, late or absent'],
+  notifications:['Parent Notifications', 'Keep parents informed automatically'],
+  planner:['Activity Planner', 'Plan fun, value-based activities for every session']
+};
+
+function render(){
+  $('#nav').innerHTML = NAV.map(n => {
+    const active = view === n.view && (n.view !== 'notifications' || n.tab === notifTab);
+    return `<button class="${active ? 'on' : ''}" onclick="go('${n.view}','${n.tab || ''}')"><span>${n.icon}</span>${n.label}</button>`;
+  }).join('');
+  $('#pageTitle').textContent = TITLES[view][0];
+  $('#pageSub').textContent = TITLES[view][1];
+  $('#view').innerHTML = VIEWS[view]();
+}
+
+let tTimer;
+function toast(msg){
+  const t = $('#toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(tTimer);
+  tTimer = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+render();
+</script>
+</body>
+</html>
